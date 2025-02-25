@@ -31,10 +31,9 @@ Bu oyunu yerel makinenizde çalıştırmak isterseniz aşağıdaki adımları iz
 ### Adımlar
 1. **Projeyi klonlayın:**
    ```bash
-   git clone https://github.com/kullanici-adi/tabu-game.git
+   git clone https://github.com/memetyc/TabuGame.git
    cd tabu-game
    ```
-   *(Not: Kendi GitHub reposunu oluşturup linki buraya eklemelisin.)*
 
 2. **Bağımlılıkları yükleyin:**
    ```bash
