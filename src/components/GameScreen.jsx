@@ -140,11 +140,11 @@ const words = [
 
 
 function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, team2Score, setTeam2Score, setGameState }) {
-    const [timeLeft, setTimeLeft] = useState(120); // 2 dakika = 120 saniye
+    const [timeLeft, setTimeLeft] = useState(10); // 2 dakika = 120 saniye
     const [currentWordIndex, setCurrentWordIndex] = useState(null); // İlk kelimeyi rastgele seçmek için
     const [usedIndices, setUsedIndices] = useState([]); // Kullanılmış kelimeleri takip etmek
     const [isPaused, setIsPaused] = useState(false); // Oyun durdu mu?
-    const [stop,setStop] = useState(false)
+
     
 
     const successSound = new Audio('/success.mp3')
@@ -152,74 +152,78 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
     successSound.volume = 0.08;
     unSuccessSound.volume = 0.03;
     // Rastgele kelime seçme fonksiyonu
-    const getRandomWordIndex = () => {     
-           
+    const getRandomWordIndex = () => {      
         if (usedIndices.length >= words.length) {          
             setGameState('end')
             return null
         }
         let randomIndex;
         do {
+            console.log(randomIndex,'random',words.length);
             randomIndex = Math.floor(Math.random() * words.length);
+            console.log(randomIndex,'random',words.length);
             
         } while (usedIndices.includes(randomIndex));
+
+        console.log(randomIndex);
+        setCurrentWordIndex(randomIndex)
         setUsedIndices(prev => [...prev,randomIndex])
-        return randomIndex;
     };
 
     // İlk kelimeyi oyun başladığında veya kelime değiştiğinde seç
-    useEffect(() => {
-        if (currentWordIndex === null && !isPaused) {
-            setCurrentWordIndex(getRandomWordIndex());
-        }
-    }, [currentWordIndex, isPaused]);
+    useEffect(() => {        
+            getRandomWordIndex()
+    }, []);
+
 
     // Zamanlayıcı
     useEffect(() => {
-        if (timeLeft > 0 && !isPaused) {
+        if (timeLeft) {
             const timer = setInterval(() => {
                 setTimeLeft((prev) => prev - 1);
             }, 1000);
-            if(stop){
+            if(isPaused){
                 clearInterval(timer)
             }
             return () => clearInterval(timer);
         } else if (timeLeft === 0) {
             setIsPaused(true); // Süre bittiğinde oyun durur
         }
-    }, [timeLeft, isPaused,stop]);
+    }, [timeLeft, isPaused]);
 
     const handleCorrect = () => {
-        successSound.play()
         if (currentTeam === 'blue') setTeam1Score(team1Score + 1);
         else setTeam2Score(team2Score + 1);
-        setCurrentWordIndex(null); // Yeni kelime
+        getRandomWordIndex()
+        successSound.play()
     };
 
     
 
     const handleSkip = () => {
-        setCurrentWordIndex(null); // Yeni kelime
+        getRandomWordIndex()
     };
 
     const handleForbidden = () => {
         if (currentTeam === 'blue') setTeam1Score(team1Score > 0 ? team1Score - 1 : 0);
         else setTeam2Score(team2Score > 0 ? team2Score - 1 : 0);
+        getRandomWordIndex()
         unSuccessSound.play()
-        setCurrentWordIndex(null); // Yeni kelime
     };
 
     const handleNextTeam = () => {
         setCurrentTeam(currentTeam === 'blue' ? 'red' : 'blue'); // Takımı değiştir
-        setTimeLeft(120); // Süreyi sıfırla
+        setTimeLeft(10); // Süreyi sıfırla
         setIsPaused(false); // Oyunu başlat
-        setCurrentWordIndex(null); // Yeni kelime seçilecek
+        getRandomWordIndex()
     };
 
     const handleStop = () =>{
-        setStop(prev => !prev)
+        setIsPaused(prev => !prev)
         handleSkip()
     }
+    console.log(words[currentWordIndex]?.word);
+    
     return (
         <div className={` flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4`}>
             <p className="text-lg text-gray-600">
@@ -243,13 +247,14 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
 
             </div>
 
-            {timeLeft > 0 && !isPaused ? (
+            {timeLeft > 0 ? (
                 <div className='card w-full max-w-md bg-white shadow-xl p-6 relative'>
 
-                  <div className={`${stop && 'blur'} `}>
+                  <div className={`${isPaused && 'blur'} `}>
                   <h3 className="text-2xl font-bold text-center text-primary mb-4">
                         {currentWordIndex !== null && words[currentWordIndex]?.word ? words[currentWordIndex].word : "Kelimeler Bitti"}
                     </h3>
+                    
                     <ul className="text-center font-bold text-gray-700 ">
                         {currentWordIndex !== null && words[currentWordIndex]?.forbidden.map((forbiddenWord, index) => (
                             <li key={index} className="text-lg">{forbiddenWord}</li>
@@ -273,11 +278,11 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
                     </div>
                     </div>
                    {
-                    stop &&  <p className='absolute text-2xl text-error bg-base-100/20 text-center font-bold left-1/2 top-1/2 w-full p-3 -translate-1/2'>Oyun durduruldugunda kelime otomatik olarak değiştirilir </p>
+                    isPaused &&  <p className='absolute text-2xl text-error bg-base-100/20 text-center font-bold left-1/2 top-1/2 w-full p-3 -translate-1/2'>Oyun durduruldugunda kelime otomatik olarak değiştirilir </p>
                    }
 
                     <div>
-                        <button onClick={handleStop} className='btn w-full mt-4'>{stop ? 'Oyunu Başlat' : 'Oyunu Durdur'}</button>
+                        <button onClick={handleStop} className='btn w-full mt-4'>{isPaused ? 'Oyunu Başlat' : 'Oyunu Durdur'}</button>
                     </div>
 
                 </div>
