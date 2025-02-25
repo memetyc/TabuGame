@@ -250,7 +250,7 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
             {timeLeft > 0 ? (
                 <div className='card w-full max-w-md bg-white shadow-xl p-6 relative'>
 
-                  <div className={`${isPaused && 'blur'} `}>
+                  <div className={`${isPaused && 'blur pointer-events-none'} `}>
                   <h3 className="text-2xl font-bold text-center text-primary mb-4">
                         {currentWordIndex !== null && words[currentWordIndex]?.word ? words[currentWordIndex].word : "Kelimeler Bitti"}
                     </h3>
