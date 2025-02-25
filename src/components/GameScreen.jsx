@@ -140,7 +140,7 @@ const words = [
 
 
 function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, team2Score, setTeam2Score, setGameState }) {
-    const [timeLeft, setTimeLeft] = useState(10); // 2 dakika = 120 saniye
+    const [timeLeft, setTimeLeft] = useState(120); // 2 dakika = 120 saniye
     const [currentWordIndex, setCurrentWordIndex] = useState(null); // İlk kelimeyi rastgele seçmek için
     const [usedIndices, setUsedIndices] = useState([]); // Kullanılmış kelimeleri takip etmek
     const [isPaused, setIsPaused] = useState(false); // Oyun durdu mu?
@@ -213,7 +213,7 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
 
     const handleNextTeam = () => {
         setCurrentTeam(currentTeam === 'blue' ? 'red' : 'blue'); // Takımı değiştir
-        setTimeLeft(10); // Süreyi sıfırla
+        setTimeLeft(120); // Süreyi sıfırla
         setIsPaused(false); // Oyunu başlat
         getRandomWordIndex()
     };
