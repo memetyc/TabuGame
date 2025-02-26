@@ -17,6 +17,8 @@ function StartScreen({ setGameState }) {
         <button onClick={startGame} className="btn btn-primary btn-lg">
           Oyunu Başlat
         </button>
+      
+
       </div>
     );
   }
