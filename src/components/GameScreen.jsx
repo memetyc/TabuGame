@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { IoMdClose, IoMdCheckmark, IoIosArrowForward } from "react-icons/io";
 
 
@@ -145,6 +145,7 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
     const [usedIndices, setUsedIndices] = useState([]); // Kullanılmış kelimeleri takip etmek
     const [isPaused, setIsPaused] = useState(false); // Oyun durdu mu?
 
+    const timerRef = useRef(null);
     
 
     const successSound = new Audio('/success.mp3')
@@ -159,13 +160,9 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
         }
         let randomIndex;
         do {
-            console.log(randomIndex,'random',words.length);
             randomIndex = Math.floor(Math.random() * words.length);
-            console.log(randomIndex,'random',words.length);
             
         } while (usedIndices.includes(randomIndex));
-
-        console.log(randomIndex);
         setCurrentWordIndex(randomIndex)
         setUsedIndices(prev => [...prev,randomIndex])
     };
@@ -178,22 +175,26 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
 
     // Zamanlayıcı
     useEffect(() => {
-        if (timeLeft) {
-            const timer = setInterval(() => {
-                setTimeLeft((prev) => prev - 1);
+        if (!isPaused && timeLeft > 0) {
+            timerRef.current = setInterval(() => {
+                setTimeLeft(prev => prev - 1);
             }, 1000);
-            if(isPaused){
-                clearInterval(timer)
-            }
-            return () => clearInterval(timer);
-        } else if (timeLeft === 0) {
-            setIsPaused(true); // Süre bittiğinde oyun durur
         }
-    }, [timeLeft, isPaused]);
+
+        return () => clearInterval(timerRef.current);
+    }, [isPaused]);
+
+    useEffect(()=>{
+        if (timeLeft === 0) {
+            setIsPaused(true);
+            clearInterval(timerRef.current);
+        }
+    },[timeLeft])
+
 
     const handleCorrect = () => {
-        if (currentTeam === 'blue') setTeam1Score(team1Score + 1);
-        else setTeam2Score(team2Score + 1);
+        if (currentTeam === 'blue') setTeam1Score(prev => prev + 1);
+        else setTeam2Score(prev => prev + 1);
         getRandomWordIndex()
         successSound.play()
     };
@@ -205,8 +206,8 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
     };
 
     const handleForbidden = () => {
-        if (currentTeam === 'blue') setTeam1Score(team1Score > 0 ? team1Score - 1 : 0);
-        else setTeam2Score(team2Score > 0 ? team2Score - 1 : 0);
+        if (currentTeam === 'blue') setTeam1Score(prev => (prev > 0 ? prev - 1 : 0));
+        else setTeam2Score(prev => (prev > 0 ? prev - 1 : 0));
         getRandomWordIndex()
         unSuccessSound.play()
     };
@@ -220,9 +221,11 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
 
     const handleStop = () =>{
         setIsPaused(prev => !prev)
+        if (!isPaused) {
+            clearInterval(timerRef.current);
+        }
         handleSkip()
     }
-    console.log(words[currentWordIndex]?.word);
     
     return (
         <div className={` flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4`}>

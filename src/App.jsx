@@ -8,7 +8,7 @@ function App() {
   const [currentTeam, setCurrentTeam] = useState('blue'); // 'blue' veya 'red'
   const [team1Score, setTeam1Score] = useState(0);
   const [team2Score, setTeam2Score] = useState(0);
-console.log(gameState);
+
 
   return (
     <div className="App">
