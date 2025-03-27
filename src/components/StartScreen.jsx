@@ -4,7 +4,7 @@ function StartScreen({ setGameState }) {
     };
   
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <div className="flex flex-col items-center justify-center  bg-gray-100 p-4">
         {/* Başlık ve Açıklama Kartı */}
         <div className="card w-full max-w-md bg-white shadow-xl p-6 mb-6 text-center">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">Tabu Oyunu</h1>

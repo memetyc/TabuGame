@@ -228,7 +228,7 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
     }
 
     return (
-        <div className={`flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4`}>
+        <div className={`flex flex-col items-center justify-center w-full bg-gray-100 p-4`}>
             <p className="text-lg text-gray-600">
                 Kullanılan Kelimeler: <span className="font-semibold">{usedIndices.length}/{words.length}</span>
             </p>

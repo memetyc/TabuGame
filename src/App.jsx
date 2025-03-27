@@ -11,7 +11,7 @@ function App() {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-5">
+    <div className="min-h-screen flex relative flex-col items-center justify-center bg-gray-100 pb-5">
       {gameState === 'start' && <StartScreen setGameState={setGameState} />}
       {gameState === 'playing' && (
         <GameScreen
@@ -28,7 +28,7 @@ function App() {
         <ResultScreen team1Score={team1Score} team2Score={team2Score} />
       )}
 
-      <div className=" left-0 w-full flex justify-center">
+      <div className="absolute left-0 bottom-3 w-full flex justify-center">
         <a
           target='_blank'
           className="text-primary text-sm"
