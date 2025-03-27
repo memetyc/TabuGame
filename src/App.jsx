@@ -11,7 +11,7 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="min-h-screen">
       {gameState === 'start' && <StartScreen setGameState={setGameState} />}
       {gameState === 'playing' && (
         <GameScreen
