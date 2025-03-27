@@ -11,7 +11,7 @@ function App() {
 
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-100 pb-5">
       {gameState === 'start' && <StartScreen setGameState={setGameState} />}
       {gameState === 'playing' && (
         <GameScreen
@@ -28,15 +28,15 @@ function App() {
         <ResultScreen team1Score={team1Score} team2Score={team2Score} />
       )}
 
-<div className="absolute bottom-3 left-0 w-full flex justify-center">
-  <a 
-    target='_blank' 
-    className="text-primary text-sm" 
-    href="https://www.helloworldyazilim.com/"
-  >
-    Hello World Yazılım Akademi
-  </a>
-</div>
+      <div className=" left-0 w-full flex justify-center">
+        <a
+          target='_blank'
+          className="text-primary text-sm"
+          href="https://www.helloworldyazilim.com/"
+        >
+          Hello World Yazılım Akademi
+        </a>
+      </div>
 
     </div>
   );
