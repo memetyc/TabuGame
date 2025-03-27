@@ -146,30 +146,30 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
     const [isPaused, setIsPaused] = useState(false); // Oyun durdu mu?
 
     const timerRef = useRef(null);
-    
+
 
     const successSound = new Audio('/success.mp3')
     const unSuccessSound = new Audio('/unsuccess.mp3')
     successSound.volume = 0.08;
     unSuccessSound.volume = 0.03;
     // Rastgele kelime seçme fonksiyonu
-    const getRandomWordIndex = () => {      
-        if (usedIndices.length >= words.length) {          
+    const getRandomWordIndex = () => {
+        if (usedIndices.length >= words.length) {
             setGameState('end')
             return null
         }
         let randomIndex;
         do {
             randomIndex = Math.floor(Math.random() * words.length);
-            
+
         } while (usedIndices.includes(randomIndex));
         setCurrentWordIndex(randomIndex)
-        setUsedIndices(prev => [...prev,randomIndex])
+        setUsedIndices(prev => [...prev, randomIndex])
     };
 
     // İlk kelimeyi oyun başladığında veya kelime değiştiğinde seç
-    useEffect(() => {        
-            getRandomWordIndex()
+    useEffect(() => {
+        getRandomWordIndex()
     }, []);
 
 
@@ -184,12 +184,12 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
         return () => clearInterval(timerRef.current);
     }, [isPaused]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (timeLeft === 0) {
             setIsPaused(true);
             clearInterval(timerRef.current);
         }
-    },[timeLeft])
+    }, [timeLeft])
 
 
     const handleCorrect = () => {
@@ -199,7 +199,7 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
         successSound.play()
     };
 
-    
+
 
     const handleSkip = () => {
         getRandomWordIndex()
@@ -219,23 +219,23 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
         getRandomWordIndex()
     };
 
-    const handleStop = () =>{
+    const handleStop = () => {
         setIsPaused(prev => !prev)
         if (!isPaused) {
             clearInterval(timerRef.current);
         }
         handleSkip()
     }
-    
+
     return (
         <div className={` flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4`}>
             <p className="text-lg text-gray-600">
                 Kullanılan Kelimeler: <span className="font-semibold">{usedIndices.length}/{words.length}</span>
             </p>
             <div className="text-center ">
-            <h2 className={`text-3xl font-bold mb-2 ${currentTeam === 'blue' ? 'text-blue-600' : 'text-red-600'}`}>
-  Takım {currentTeam === 'blue' ? 'Mavi' : 'Kırmızı'}
-</h2>                <p className={`text-lg ${timeLeft <= 10 && timeLeft != 0 ? 'text-red-500 animate-ping' : 'text-gray-600'}`}>
+                <h2 className={`text-3xl font-bold mb-2 ${currentTeam === 'blue' ? 'text-blue-600' : 'text-red-600'}`}>
+                    Takım {currentTeam === 'blue' ? 'Mavi' : 'Kırmızı'}
+                </h2>                <p className={`text-lg ${timeLeft <= 10 && timeLeft != 0 ? 'text-red-500 animate-ping' : 'text-gray-600'}`}>
                     Kalan Süre: <span className="font-semibold">{timeLeft} saniye</span>
                 </p>
                 <div className='flex justify-between my-3'>
@@ -251,49 +251,49 @@ function GameScreen({ currentTeam, setCurrentTeam, team1Score, setTeam1Score, te
             </div>
 
             {timeLeft > 0 ? (
-                <div className='card w-full max-w-md bg-white shadow-xl p-6 relative'>
+                <div className={`card w-full max-w-md bg-white shadow-xl  relative  `}>
+                   
+                        <div className={`${isPaused && 'blur-lg pointer-events-none'} p-6 `}>
+                            <h3 className="text-2xl font-bold text-center text-primary mb-4">
+                                {currentWordIndex !== null && words[currentWordIndex]?.word ? words[currentWordIndex].word : "Kelimeler Bitti"}
+                            </h3>
 
-                  <div className={`${isPaused && 'blur pointer-events-none'} `}>
-                  <h3 className="text-2xl font-bold text-center text-primary mb-4">
-                        {currentWordIndex !== null && words[currentWordIndex]?.word ? words[currentWordIndex].word : "Kelimeler Bitti"}
-                    </h3>
-                    
-                    <ul className="text-center font-bold text-gray-700 ">
-                        {currentWordIndex !== null && words[currentWordIndex]?.forbidden.map((forbiddenWord, index) => (
-                            <li key={index} className="text-lg">{forbiddenWord}</li>
-                        ))}
-                    </ul>
+                            <ul className="text-center font-bold text-gray-700 ">
+                                {currentWordIndex !== null && words[currentWordIndex]?.forbidden.map((forbiddenWord, index) => (
+                                    <li key={index} className="text-lg">{forbiddenWord}</li>
+                                ))}
+                            </ul>
 
-                
-                    <div className="flex gap-4 justify-center mt-5">
-                        <button onClick={handleForbidden} className="btn btn-lg btn-error">
-                            <IoMdClose size={30} />
 
-                        </button>
-                        <button onClick={handleSkip} className="btn btn-lg  btn-warning">
-                            <IoIosArrowForward size={30} />
+                            <div className="flex gap-4 justify-center mt-5">
+                                <button onClick={handleForbidden} className="btn btn-lg btn-error">
+                                    <IoMdClose size={30} />
 
-                        </button>
+                                </button>
+                                <button onClick={handleSkip} className="btn btn-lg  btn-warning">
+                                    <IoIosArrowForward size={30} />
 
-                        <button onClick={handleCorrect} className="btn btn-lg  btn-success">
-                            <IoMdCheckmark size={30} />
-                        </button>
-                    </div>
-                    </div>
-                   {
-                    isPaused &&  <p className='absolute text-2xl text-error bg-base-100/20 text-center font-bold left-1/2 top-1/2 w-full p-3 -translate-1/2'>Oyun durduruldugunda kelime otomatik olarak değiştirilir </p>
-                   }
+                                </button>
 
-                    <div>
-                        <button onClick={handleStop} className='btn w-full mt-4'>{isPaused ? 'Oyunu Başlat' : 'Oyunu Durdur'}</button>
-                    </div>
+                                <button onClick={handleCorrect} className="btn btn-lg  btn-success">
+                                    <IoMdCheckmark size={30} />
+                                </button>
+                            </div>
+                        </div>
+                        {
+                            isPaused && <p className='absolute text-2xl  bg-neutral text-white text-center font-bold left-1/2 top-1/2 w-full p-3 -translate-1/2'>Oyun durduruldugunda kelime otomatik olarak değiştirilir </p>
+                        }
 
+                        <div className='p-6 pt-0'>
+                            <button onClick={handleStop} className='btn btn-neutral w-full mt-4'>{isPaused ? 'Oyunu Başlat' : 'Oyunu Durdur'}</button>
+                        </div>
+                   
                 </div>
             ) : (
                 <div className="card w-full max-w-md bg-white shadow-xl p-6 mb-6 text-center">
                     <h3 className="text-2xl font-bold text-gray-800 mb-4">Süre Bitti!</h3>
                     <p className="text-lg text-gray-600 mb-4">Telefonu diğer takıma verin.</p>
-                    <button onClick={handleNextTeam} className="btn btn-primary">
+                    <button onClick={handleNextTeam} className="btn btn-neutral">
                         Takımı Değiştir ve Başlat
                     </button>
                 </div>
