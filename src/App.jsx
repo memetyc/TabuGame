@@ -28,7 +28,16 @@ function App() {
         <ResultScreen team1Score={team1Score} team2Score={team2Score} />
       )}
 
-      <a target='_blank' className="text-primary text-sm bottom-1 absolute left-1/2 -translate-1/2" href="https://www.helloworldyazilim.com/">Hello World Yazılım Akademi</a>
+<div className="absolute bottom-3 left-0 w-full flex justify-center">
+  <a 
+    target='_blank' 
+    className="text-primary text-sm" 
+    href="https://www.helloworldyazilim.com/"
+  >
+    Hello World Yazılım Akademi
+  </a>
+</div>
+
     </div>
   );
 }
