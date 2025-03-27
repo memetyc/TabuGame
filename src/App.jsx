@@ -11,7 +11,7 @@ function App() {
 
 
   return (
-    <div className="min-h-[100svh] flex relative flex-col items-center justify-center bg-gray-100 pb-5">
+    <div className="min-h-[100dvh] flex relative flex-col items-center justify-center bg-gray-100 pb-5">
       {gameState === 'start' && <StartScreen setGameState={setGameState} />}
       {gameState === 'playing' && (
         <GameScreen
